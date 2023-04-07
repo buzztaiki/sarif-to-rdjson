@@ -155,13 +155,7 @@ func rdfLocation(loc *sarif.Location) *rdf.Location {
 	}
 }
 
-func main() {
-	content, err := io.ReadAll(os.Stdin)
-	abortIfError("failed to read sarif", err)
-
-	report, err := sarif.FromBytes(content)
-	abortIfError("failed to parse sarif", err)
-
+func rdfToSarif(report *sarif.Report) *rdf.DiagnosticResult {
 	diags := make([]*rdf.Diagnostic, 0)
 	for _, run := range report.Runs {
 		for _, res := range run.Results {
@@ -185,7 +179,17 @@ func main() {
 		}
 	}
 
-	out, err := protojson.Marshal(&rdf.DiagnosticResult{Diagnostics: diags})
+	return &rdf.DiagnosticResult{Diagnostics: diags}
+}
+
+func main() {
+	content, err := io.ReadAll(os.Stdin)
+	abortIfError("failed to read sarif", err)
+
+	report, err := sarif.FromBytes(content)
+	abortIfError("failed to parse sarif", err)
+
+	out, err := protojson.Marshal(rdfToSarif(report))
 	if err != nil {
 		abortIfError("failed to marshal result", err)
 	}
