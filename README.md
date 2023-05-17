@@ -1,9 +1,12 @@
+completly work in progress.
+
 - [SARIF standardization #1175](https://github.com/reviewdog/reviewdog/issues/1175)
+- https://github.com/microsoft/sarif-web-component
+
 
 ## TODO
 - [ ] test
-  - [ ] tflint result
-    - https://github.com/terraform-linters/tflint/blob/master/formatter/sarif.go
+  - [x] tflint result
   - [ ] tfsec result
   - [ ] ansible-lint result
   - [ ] codeql result

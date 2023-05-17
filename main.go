@@ -85,6 +85,7 @@ func findRuleFromResult(rules []*sarif.ReportingDescriptor, res *sarif.Result) *
 		return nil
 	}
 
+	// TODO: sarif-web-component doesn't seems to use res.Rule, do the same?
 	if res.Rule != nil {
 		if rule := findRule(rules, res.Rule.Index, res.Rule.Id); rule != nil {
 			return rule
