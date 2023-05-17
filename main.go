@@ -146,11 +146,17 @@ func rdfLocation(loc *sarif.Location) *rdf.Location {
 
 func SarifToRdf(report *sarif.Report) *rdf.DiagnosticResult {
 	diags := make([]*rdf.Diagnostic, 0)
+	var source rdf.Source
+
 	for _, run := range report.Runs {
 		for _, res := range run.Results {
 			if res == nil {
 				continue
 			}
+
+			// TODO: What if there are multiple runs?
+			source.Name = run.Tool.Driver.Name
+			source.Url = or(run.Tool.Driver.InformationURI, "")
 
 			rule := findRuleFromResult(run.Tool.Driver.Rules, res)
 			for _, loc := range res.Locations {
@@ -168,7 +174,7 @@ func SarifToRdf(report *sarif.Report) *rdf.DiagnosticResult {
 		}
 	}
 
-	return &rdf.DiagnosticResult{Diagnostics: diags}
+	return &rdf.DiagnosticResult{Source: &source, Diagnostics: diags}
 }
 
 func abort(message string) {
