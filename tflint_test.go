@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"log"
 	"os/exec"
 	"testing"
 
@@ -13,18 +14,25 @@ import (
 
 func tflint(t *testing.T, dir string) *sarif.Report {
 	t.Helper()
-	cmd := exec.Command("tflint", "--format", "sarif", "--force")
+
+	name, err := exec.LookPath("tflint")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := exec.Command(name, "--format", "sarif", "--force")
 	cmd.Dir = dir
 
 	output, err := cmd.Output()
 	if err != nil {
-		t.Fatal(err, string(output))
+		log.Printf("exec error: %v", err)
 	}
 
 	report, err := sarif.FromBytes(output)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	return report
 }
 
@@ -63,6 +71,37 @@ func TestTflintSimple(t *testing.T) {
 					Range: &rdf.Range{
 						Start: &rdf.Position{Line: 15, Column: 1},
 						End:   &rdf.Position{Line: 15, Column: 37},
+					},
+				},
+			},
+		},
+	}
+
+	if diff := cmp.Diff(&want, main.SarifToRdf(report), protocmp.Transform()); diff != "" {
+		t.Errorf("tflint/simple mismatch (-want +got):\n%s", diff)
+	}
+}
+
+func TestTflintSyntaxError(t *testing.T) {
+	report := tflint(t, "testcases/tflint/syntax-error/")
+
+	want := rdf.DiagnosticResult{
+		Source: &rdf.Source{
+			Name: "tflint-errors",
+			Url:  "https://github.com/terraform-linters/tflint",
+		},
+		Diagnostics: []*rdf.Diagnostic{
+			{
+				Message: `There is no closing brace for this block before the end of the file. This may be caused by incorrect brace nesting elsewhere in this file.`,
+				Code: &rdf.Code{
+					Value: "Unclosed configuration block",
+				},
+				Severity: rdf.Severity_ERROR,
+				Location: &rdf.Location{
+					Path: "main.tf",
+					Range: &rdf.Range{
+						Start: &rdf.Position{Line: 1, Column: 11},
+						End:   &rdf.Position{Line: 1, Column: 12},
 					},
 				},
 			},

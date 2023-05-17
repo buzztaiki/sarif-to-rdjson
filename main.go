@@ -95,10 +95,18 @@ func findRuleFromResult(rules []*sarif.ReportingDescriptor, res *sarif.Result) *
 		return rule
 	}
 
+	if res.Rule != nil && res.Rule.Id != nil {
+		return &sarif.ReportingDescriptor{ID: *res.Rule.Id}
+	}
+
+	if res.RuleID != nil {
+		return &sarif.ReportingDescriptor{ID: *res.RuleID}
+	}
+
 	return nil
 }
 
-func rdfSeverity(res sarif.Result) rdf.Severity {
+func rdfSeverity(res *sarif.Result) rdf.Severity {
 	// https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/sarif-v2.1.0-os.html#_Toc34317648
 
 	kind := or(res.Kind, "fail")
@@ -144,6 +152,17 @@ func rdfLocation(loc *sarif.Location) *rdf.Location {
 	}
 }
 
+func rdfCode(rule *sarif.ReportingDescriptor) *rdf.Code {
+	if rule == nil {
+		return &rdf.Code{}
+	}
+
+	return &rdf.Code{
+		Value: rule.ID,
+		Url:   or(rule.HelpURI, ""),
+	}
+}
+
 func SarifToRdf(report *sarif.Report) *rdf.DiagnosticResult {
 	diags := make([]*rdf.Diagnostic, 0)
 	var source rdf.Source
@@ -162,12 +181,9 @@ func SarifToRdf(report *sarif.Report) *rdf.DiagnosticResult {
 			for _, loc := range res.Locations {
 				diag := rdf.Diagnostic{
 					Message:  or(res.Message.Text, ""),
-					Severity: rdfSeverity(*res),
+					Severity: rdfSeverity(res),
 					Location: rdfLocation(loc),
-					Code: &rdf.Code{
-						Value: rule.ID,
-						Url:   or(rule.HelpURI, ""),
-					},
+					Code:     rdfCode(rule),
 				}
 				diags = append(diags, &diag)
 			}
