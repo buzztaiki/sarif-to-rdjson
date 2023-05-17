@@ -13,17 +13,6 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
-func abort(message string) {
-	fmt.Fprintln(os.Stderr, message)
-	os.Exit(1)
-}
-
-func abortIfError(message string, err error) {
-	if err != nil {
-		abort(fmt.Sprintf("%s: %s", message, err))
-	}
-}
-
 func or[T any](x *T, y T) T {
 	if x == nil {
 		return y
@@ -155,7 +144,7 @@ func rdfLocation(loc *sarif.Location) *rdf.Location {
 	}
 }
 
-func rdfToSarif(report *sarif.Report) *rdf.DiagnosticResult {
+func SarifToRdf(report *sarif.Report) *rdf.DiagnosticResult {
 	diags := make([]*rdf.Diagnostic, 0)
 	for _, run := range report.Runs {
 		for _, res := range run.Results {
@@ -182,6 +171,17 @@ func rdfToSarif(report *sarif.Report) *rdf.DiagnosticResult {
 	return &rdf.DiagnosticResult{Diagnostics: diags}
 }
 
+func abort(message string) {
+	fmt.Fprintln(os.Stderr, message)
+	os.Exit(1)
+}
+
+func abortIfError(message string, err error) {
+	if err != nil {
+		abort(fmt.Sprintf("%s: %s", message, err))
+	}
+}
+
 func main() {
 	content, err := io.ReadAll(os.Stdin)
 	abortIfError("failed to read sarif", err)
@@ -189,7 +189,7 @@ func main() {
 	report, err := sarif.FromBytes(content)
 	abortIfError("failed to parse sarif", err)
 
-	out, err := protojson.Marshal(rdfToSarif(report))
+	out, err := protojson.Marshal(SarifToRdf(report))
 	if err != nil {
 		abortIfError("failed to marshal result", err)
 	}
