@@ -1,0 +1,74 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "informationUri": "https://github.com/aquasecurity/defsec",
+          "name": "defsec",
+          "rules": [
+            {
+              "id": "aws-ec2-enable-at-rest-encryption",
+              "shortDescription": {
+                "text": "Instance with unencrypted block device."
+              },
+              "helpUri": "https://aquasecurity.github.io/tfsec/latest/checks/aws/ec2/enable-at-rest-encryption/"
+            },
+            {
+              "id": "aws-ec2-enforce-http-token-imds",
+              "shortDescription": {
+                "text": "aws_instance should activate session tokens for Instance Metadata Service."
+              },
+              "helpUri": "https://aquasecurity.github.io/tfsec/latest/checks/aws/ec2/enforce-http-token-imds/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "aws-ec2-enable-at-rest-encryption",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Root block device is not encrypted."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.tf"
+                },
+                "region": {
+                  "startLine": 15,
+                  "endLine": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "aws-ec2-enforce-http-token-imds",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Instance does not require IMDS access to require a token"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.tf"
+                },
+                "region": {
+                  "startLine": 15,
+                  "endLine": 22
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

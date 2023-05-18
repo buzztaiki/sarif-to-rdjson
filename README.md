@@ -7,7 +7,7 @@ completly work in progress.
 ## TODO
 - [ ] test
   - [x] tflint result
-  - [ ] tfsec result
+  - [x] tfsec result
   - [ ] ansible-lint result
   - [ ] codeql result
 - [ ] consider multiple runs

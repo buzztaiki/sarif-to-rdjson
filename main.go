@@ -181,6 +181,7 @@ func SarifToRdf(report *sarif.Report) *rdf.DiagnosticResult {
 			rule := findRuleFromResult(run.Tool.Driver.Rules, res)
 			for _, loc := range res.Locations {
 				diag := rdf.Diagnostic{
+					// TODO: append rule.description?
 					Message:  or(res.Message.Text, ""),
 					Severity: rdfSeverity(res),
 					Location: rdfLocation(loc),
