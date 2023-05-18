@@ -1,43 +1,16 @@
 package main_test
 
 import (
-	"log"
-	"os/exec"
 	"testing"
 
 	"github.com/buzztaiki/sarif-to-rdjson"
 	"github.com/google/go-cmp/cmp"
-	"github.com/owenrumney/go-sarif/v2/sarif"
 	"github.com/reviewdog/reviewdog/proto/rdf"
 	"google.golang.org/protobuf/testing/protocmp"
 )
 
-func tflint(t *testing.T, dir string) *sarif.Report {
-	t.Helper()
-
-	name, err := exec.LookPath("tflint")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	cmd := exec.Command(name, "--format", "sarif", "--force")
-	cmd.Dir = dir
-
-	output, err := cmd.Output()
-	if err != nil {
-		log.Printf("exec error: %v", err)
-	}
-
-	report, err := sarif.FromBytes(output)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	return report
-}
-
 func TestTflintSimple(t *testing.T) {
-	report := tflint(t, "testcases/tflint/simple/")
+	report := loadSarif(t, "testcases/tflint/simple")
 
 	want := rdf.DiagnosticResult{
 		Source: &rdf.Source{
@@ -83,7 +56,7 @@ func TestTflintSimple(t *testing.T) {
 }
 
 func TestTflintSyntaxError(t *testing.T) {
-	report := tflint(t, "testcases/tflint/syntax-error/")
+	report := loadSarif(t, "testcases/tflint/syntax-error")
 
 	want := rdf.DiagnosticResult{
 		Source: &rdf.Source{
