@@ -28,8 +28,8 @@ func TestTfsec(t *testing.T) {
 				Location: &rdf.Location{
 					Path: "main.tf",
 					Range: &rdf.Range{
-						Start: &rdf.Position{Line: 15, Column: 1},
-						End:   &rdf.Position{Line: 22, Column: 1},
+						Start: &rdf.Position{Line: 15},
+						End:   &rdf.Position{Line: 22},
 					},
 				},
 			},
@@ -43,8 +43,8 @@ func TestTfsec(t *testing.T) {
 				Location: &rdf.Location{
 					Path: "main.tf",
 					Range: &rdf.Range{
-						Start: &rdf.Position{Line: 15, Column: 1},
-						End:   &rdf.Position{Line: 22, Column: 1},
+						Start: &rdf.Position{Line: 15},
+						End:   &rdf.Position{Line: 22},
 					},
 				},
 			},
