@@ -1,0 +1,6 @@
+---
+
+- hosts: localhost
+  tasks:
+    - ansible.builtin.command:
+        cmd: pwd

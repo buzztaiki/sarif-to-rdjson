@@ -19,33 +19,32 @@ func TestTfsec(t *testing.T) {
 		},
 		Diagnostics: []*rdf.Diagnostic{
 			{
-				Message: `Root block device is not encrypted.`,
 				Code: &rdf.Code{
 					Value: "aws-ec2-enable-at-rest-encryption",
 					Url:   "https://aquasecurity.github.io/tfsec/latest/checks/aws/ec2/enable-at-rest-encryption/",
 				},
 				Severity: rdf.Severity_ERROR,
+				Message:  `Root block device is not encrypted.`,
 				Location: &rdf.Location{
 					Path: "main.tf",
 					Range: &rdf.Range{
-						Start: &rdf.Position{Line: 15, Column: 1},
-						End:   &rdf.Position{Line: 22, Column: 1},
+						Start: &rdf.Position{Line: 15},
+						End:   &rdf.Position{Line: 22},
 					},
 				},
 			},
 			{
-				Message: "Instance does not require IMDS access to require a token",
 				Code: &rdf.Code{
 					Value: "aws-ec2-enforce-http-token-imds",
 					Url:   "https://aquasecurity.github.io/tfsec/latest/checks/aws/ec2/enforce-http-token-imds/",
 				},
 				Severity: rdf.Severity_ERROR,
-
+				Message:  "Instance does not require IMDS access to require a token",
 				Location: &rdf.Location{
 					Path: "main.tf",
 					Range: &rdf.Range{
-						Start: &rdf.Position{Line: 15, Column: 1},
-						End:   &rdf.Position{Line: 22, Column: 1},
+						Start: &rdf.Position{Line: 15},
+						End:   &rdf.Position{Line: 22},
 					},
 				},
 			},

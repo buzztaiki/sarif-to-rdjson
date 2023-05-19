@@ -107,19 +107,24 @@ func findRuleFromResult(rules []*sarif.ReportingDescriptor, res *sarif.Result) *
 	return nil
 }
 
-func rdfSeverity(res *sarif.Result) rdf.Severity {
+func rdfSeverity(res *sarif.Result, rule *sarif.ReportingDescriptor) rdf.Severity {
 	// https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/sarif-v2.1.0-os.html#_Toc34317648
+	// https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/sarif-v2.1.0-os.html#_Ref508894469
 
 	kind := or(res.Kind, "fail")
+	level := or(res.Level, "")
+	if level == "" && rule != nil && rule.DefaultConfiguration != nil {
+		level = rule.DefaultConfiguration.Level
+	}
 
-	if res.Level == nil {
+	if level == "" {
 		if kind != "fail" {
 			return rdf.Severity_UNKNOWN_SEVERITY
 		}
 		return rdf.Severity_WARNING
 	}
 
-	switch *res.Level {
+	switch level {
 	case "warning":
 		return rdf.Severity_WARNING
 	case "error":
@@ -139,12 +144,16 @@ func rdfLocation(loc *sarif.Location) *rdf.Location {
 	}
 
 	start := &rdf.Position{
-		Line:   int32(or(loc.PhysicalLocation.Region.StartLine, 1)),
-		Column: int32(or(loc.PhysicalLocation.Region.StartColumn, 1)),
+		Line:   int32(or(loc.PhysicalLocation.Region.StartLine, 0)),
+		Column: int32(or(loc.PhysicalLocation.Region.StartColumn, 0)),
 	}
-	end := &rdf.Position{
-		Line:   int32(or(loc.PhysicalLocation.Region.EndLine, int(start.Line))),
-		Column: int32(or(loc.PhysicalLocation.Region.EndColumn, int(start.Column))),
+
+	var end *rdf.Position
+	if loc.PhysicalLocation.Region.EndLine != nil {
+		end = &rdf.Position{
+			Line:   int32(*loc.PhysicalLocation.Region.EndLine),
+			Column: int32(or(loc.PhysicalLocation.Region.EndColumn, 0)),
+		}
 	}
 
 	return &rdf.Location{
@@ -164,6 +173,15 @@ func rdfCode(rule *sarif.ReportingDescriptor) *rdf.Code {
 	}
 }
 
+func rdfMessage(res *sarif.Result, rule *sarif.ReportingDescriptor) string {
+	// https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/sarif-v2.1.0-os.html#_Toc34317459
+	// TODO: improve it
+	// - read spec
+	// - append rule's description?
+	// - apppend rule's help.text? e.g. ansible-lint
+	return or(res.Message.Text, "")
+}
+
 func SarifToRdf(report *sarif.Report) *rdf.DiagnosticResult {
 	diags := make([]*rdf.Diagnostic, 0)
 	var source rdf.Source
@@ -181,9 +199,8 @@ func SarifToRdf(report *sarif.Report) *rdf.DiagnosticResult {
 			rule := findRuleFromResult(run.Tool.Driver.Rules, res)
 			for _, loc := range res.Locations {
 				diag := rdf.Diagnostic{
-					// TODO: append rule.description?
-					Message:  or(res.Message.Text, ""),
-					Severity: rdfSeverity(res),
+					Message:  rdfMessage(res, rule),
+					Severity: rdfSeverity(res, rule),
 					Location: rdfLocation(loc),
 					Code:     rdfCode(rule),
 				}

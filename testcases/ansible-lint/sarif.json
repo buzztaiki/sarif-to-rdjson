@@ -1,0 +1,140 @@
+{
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "ansible-lint",
+          "version": "6.15.1.dev45",
+          "informationUri": "https://github.com/ansible/ansible-lint",
+          "rules": [
+            {
+              "id": "name[play]",
+              "name": "name[play]",
+              "shortDescription": {
+                "text": "All plays should be named."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": "All tasks and plays should have a distinct name for readability and for ``--start-at-task`` to work"
+              },
+              "helpUri": "https://ansible-lint.readthedocs.io/rules/name/",
+              "properties": {
+                "tags": [
+                  "idiom"
+                ]
+              }
+            },
+            {
+              "id": "name[missing]",
+              "name": "name[missing]",
+              "shortDescription": {
+                "text": "All tasks should be named."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": "All tasks and plays should have a distinct name for readability and for ``--start-at-task`` to work"
+              },
+              "helpUri": "https://ansible-lint.readthedocs.io/rules/name/",
+              "properties": {
+                "tags": [
+                  "idiom"
+                ]
+              }
+            },
+            {
+              "id": "no-changed-when",
+              "name": "no-changed-when",
+              "shortDescription": {
+                "text": "Commands should not change things if nothing needs doing."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": ""
+              },
+              "helpUri": "https://ansible-lint.readthedocs.io/rules/no-changed-when/",
+              "properties": {
+                "tags": [
+                  "command-shell",
+                  "idempotency"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "columnKind": "utf16CodeUnits",
+      "results": [
+        {
+          "ruleId": "name[play]",
+          "message": {
+            "text": "All plays should be named."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "site.yaml",
+                  "uriBaseId": "SRCROOT"
+                },
+                "region": {
+                  "startLine": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "name[missing]",
+          "message": {
+            "text": "Task/Handler: command cmd=pwd"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "site.yaml",
+                  "uriBaseId": "SRCROOT"
+                },
+                "region": {
+                  "startLine": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "no-changed-when",
+          "message": {
+            "text": "Task/Handler: command cmd=pwd"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "site.yaml",
+                  "uriBaseId": "SRCROOT"
+                },
+                "region": {
+                  "startLine": 5
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "originalUriBaseIds": {
+        "SRCROOT": {
+          "uri": "file:///home/taiki/dev/src/github.com/buzztaiki/sarif-to-rdjson/testcases/ansible-lint/"
+        }
+      }
+    }
+  ]
+}
