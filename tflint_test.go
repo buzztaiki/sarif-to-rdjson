@@ -19,11 +19,11 @@ func TestTflintSimple(t *testing.T) {
 		},
 		Diagnostics: []*rdf.Diagnostic{
 			{
-				Message: `"t100.micro" is an invalid value as instance_type`,
 				Code: &rdf.Code{
 					Value: "aws_instance_invalid_type",
 				},
 				Severity: rdf.Severity_ERROR,
+				Message:  `"t100.micro" is an invalid value as instance_type`,
 				Location: &rdf.Location{
 					Path: "main.tf",
 					Range: &rdf.Range{
@@ -33,12 +33,12 @@ func TestTflintSimple(t *testing.T) {
 				},
 			},
 			{
-				Message: `Missing version constraint for provider "aws" in "required_providers"`,
 				Code: &rdf.Code{
 					Value: "terraform_required_providers",
 					Url:   "https://github.com/terraform-linters/tflint-ruleset-terraform/blob/v0.2.2/docs/rules/terraform_required_providers.md",
 				},
 				Severity: rdf.Severity_WARNING,
+				Message:  `Missing version constraint for provider "aws" in "required_providers"`,
 				Location: &rdf.Location{
 					Path: "main.tf",
 					Range: &rdf.Range{
@@ -65,11 +65,11 @@ func TestTflintSyntaxError(t *testing.T) {
 		},
 		Diagnostics: []*rdf.Diagnostic{
 			{
-				Message: `There is no closing brace for this block before the end of the file. This may be caused by incorrect brace nesting elsewhere in this file.`,
 				Code: &rdf.Code{
 					Value: "Unclosed configuration block",
 				},
 				Severity: rdf.Severity_ERROR,
+				Message:  `There is no closing brace for this block before the end of the file. This may be caused by incorrect brace nesting elsewhere in this file.`,
 				Location: &rdf.Location{
 					Path: "main.tf",
 					Range: &rdf.Range{
