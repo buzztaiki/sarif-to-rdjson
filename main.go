@@ -149,9 +149,9 @@ func rdfLocation(loc *sarif.Location) *rdf.Location {
 	}
 
 	var end *rdf.Position
-	if loc.PhysicalLocation.Region.EndLine != nil {
+	if loc.PhysicalLocation.Region.EndLine != nil || loc.PhysicalLocation.Region.EndColumn != nil {
 		end = &rdf.Position{
-			Line:   int32(*loc.PhysicalLocation.Region.EndLine),
+			Line:   int32(or(loc.PhysicalLocation.Region.EndLine, 0)),
 			Column: int32(or(loc.PhysicalLocation.Region.EndColumn, 0)),
 		}
 	}
@@ -178,7 +178,9 @@ func rdfMessage(res *sarif.Result, rule *sarif.ReportingDescriptor) string {
 	// TODO: improve it
 	// - read spec
 	// - append rule's description?
-	// - apppend rule's help.text? e.g. ansible-lint
+	// - apppend rule's help.text? (e.g. ansible-lint)
+	// - link to codeFlows? (e.g. codeql)
+
 	return or(res.Message.Text, "")
 }
 

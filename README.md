@@ -5,9 +5,11 @@ completly work in progress.
 
 
 ## TODO
-- [ ] test
+- [x] test
   - [x] tflint result
   - [x] tfsec result
-  - [ ] ansible-lint result
-  - [ ] codeql result
-- [ ] consider multiple runs
+  - [x] ansible-lint result
+  - [x] codeql result
+- [ ] check integration with reviewdog
+- [ ] improve diagnostic message
+- [ ] consider multiple runs?
