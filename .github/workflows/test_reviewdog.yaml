@@ -19,7 +19,7 @@ jobs:
           reviewdog_version: latest
 
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Run reviewdog
         run: make test_reviewdog TESTRD_REPORTER=github-pr-review
