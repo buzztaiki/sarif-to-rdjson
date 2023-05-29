@@ -1,6 +1,7 @@
 name: Test Reviewdog
 
 on:
+  # TODO: trigger on comment
   pull_request:
 
 jobs:
