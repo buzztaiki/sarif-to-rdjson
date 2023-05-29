@@ -24,7 +24,7 @@ update_testcases:
 test:
 	go test .
 
-.ci: check build test
+ci: check build test
 
 test_reviewdog: build
 	$(MAKE) _test_reviewdog sarif=testcases/tflint/simple/sarif.json
