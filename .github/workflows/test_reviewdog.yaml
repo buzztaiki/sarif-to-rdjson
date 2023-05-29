@@ -1,4 +1,4 @@
-name: CI
+name: Test Reviewdog
 
 on:
   pull_request:
@@ -12,8 +12,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run reviewdog
-        run: |
-          cat testcases/tflint/simple/sarif.json | ./sarif-to-rdjson
-            | reviewdog -f rdjson --filter-mode nofilter --reporter github-pr-check
+        run: make test_reviewdog TESTRD_REPORTER=github-pr-review
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
