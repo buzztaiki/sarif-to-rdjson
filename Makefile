@@ -34,5 +34,6 @@ test_reviewdog: build
 	$(MAKE) _test_reviewdog sarif=testcases/codeql/sarif.json
 
 _test_reviewdog:
+	# TODO: fix diagnostics.location.path
 	cat $(sarif) | ./sarif-to-rdjson | reviewdog -f rdjson --filter-mode nofilter --reporter $(TESTRD_REPORTER)
 
