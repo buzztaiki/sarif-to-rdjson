@@ -27,11 +27,11 @@ test:
 ci: check build test
 
 test_reviewdog: build
-	$(MAKE) _test_reviewdog testcase=testcases/tflint/simple
-	$(MAKE) _test_reviewdog testcase=testcases/tflint/syntax-error
-	$(MAKE) _test_reviewdog testcase=testcases/tfsec
-	$(MAKE) _test_reviewdog testcase=testcases/ansible-lint
-	$(MAKE) _test_reviewdog testcase=testcases/codeql
+	$(MAKE) _test_reviewdog testcase=testcases/tflint/simple name=tflint
+	$(MAKE) _test_reviewdog testcase=testcases/tflint/syntax-error name=tflint
+	$(MAKE) _test_reviewdog testcase=testcases/tfsec name=tfsec
+	$(MAKE) _test_reviewdog testcase=testcases/ansible-lint name=ansible-lint
+	$(MAKE) _test_reviewdog testcase=testcases/codeql name=codeql
 
 _test_reviewdog:
 	cat $(testcase)/sarif.json | ./sarif-to-rdjson \
