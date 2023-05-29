@@ -8,11 +8,11 @@ TESTRD_REPORTER = local
 default: check build test
 
 check:
-	go vet ./...
+	go vet .
 	go run honnef.co/go/tools/cmd/staticcheck@latest ./...
 
 build:
-	go build ./...
+	go build .
 
 update_testcases:
 	(cd testcases/tflint/simple && $(TFLINT) --init && $(TFLINT) -f sarif --force > sarif.json)
@@ -21,13 +21,10 @@ update_testcases:
 	(cd testcases/ansible-lint && $(ANSIBLE_LINT) -f sarif -q | jq > sarif.json || true)
 	(cd testcases/codeql && rm -rf .codeql && codeql database create -l go -q .codeql &&  codeql database analyze --format sarif-latest -o sarif.json -q .codeql)
 
-
-	go test ./...
-
 test:
-	go test ./...
+	go test .
 
-ci: check build test
+.ci: check build test
 
 test_reviewdog: build
 	$(MAKE) _test_reviewdog sarif=testcases/tflint/simple/sarif.json
@@ -37,5 +34,5 @@ test_reviewdog: build
 	$(MAKE) _test_reviewdog sarif=testcases/codeql/sarif.json
 
 _test_reviewdog:
-	cat $(sarif) | ./sarif-to-rdjson | reviewdog -f rdjson --filter-mode nofilter --reporter $(RDTEST_REPORTER)
+	cat $(sarif) | ./sarif-to-rdjson | reviewdog -f rdjson --filter-mode nofilter --reporter $(TESTRD_REPORTER)
 

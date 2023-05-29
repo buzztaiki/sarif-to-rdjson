@@ -8,13 +8,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.20.4
 
       - name: Setup reviewdog
         uses: reviewdog/action-setup@v1
         with:
           reviewdog_version: latest
+
+      - name: Check out code
+        uses: actions/checkout@v2
 
       - name: Run reviewdog
         run: make test_reviewdog TESTRD_REPORTER=github-pr-review
