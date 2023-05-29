@@ -11,6 +11,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
+      - name: Setup reviewdog
+        uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+
       - name: Run reviewdog
         run: make test_reviewdog TESTRD_REPORTER=github-pr-review
         env:
