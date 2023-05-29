@@ -27,13 +27,13 @@ test:
 ci: check build test
 
 test_reviewdog: build
-	$(MAKE) _test_reviewdog sarif=testcases/tflint/simple/sarif.json
-	$(MAKE) _test_reviewdog sarif=testcases/tflint/syntax-error/sarif.json
-	$(MAKE) _test_reviewdog sarif=testcases/tfsec/sarif.json
-	$(MAKE) _test_reviewdog sarif=testcases/ansible-lint/sarif.json
-	$(MAKE) _test_reviewdog sarif=testcases/codeql/sarif.json
+	$(MAKE) _test_reviewdog testcase=testcases/tflint/simple
+	$(MAKE) _test_reviewdog testcase=testcases/tflint/syntax-error
+	$(MAKE) _test_reviewdog testcase=testcases/tfsec
+	$(MAKE) _test_reviewdog testcase=testcases/ansible-lint
+	$(MAKE) _test_reviewdog testcase=testcases/codeql
 
 _test_reviewdog:
-	# TODO: fix diagnostics.location.path
-	cat $(sarif) | ./sarif-to-rdjson | reviewdog -f rdjson --filter-mode nofilter --reporter $(TESTRD_REPORTER)
-
+	cat $(testcase)/sarif.json | ./sarif-to-rdjson \
+		| jq '.diagnostics = (.diagnostics | map(.location.path = "$(testcase)/" + .location.path))' \
+	  	| reviewdog -f rdjson --filter-mode nofilter --reporter $(TESTRD_REPORTER)
